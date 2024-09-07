@@ -115,11 +115,7 @@ function About() {
                   <p className="font-semibold dark:text-white text-black text-base">
                     Currencies:{" "}
                     <span className="font-normal text-base">
-                      {country.currencies
-                        ? Object.values(country.currencies)
-                            .map((currency) => currency.name)
-                            .join(", ")
-                        : "N/A"}
+                      {country.currencies}
                     </span>
                   </p>
                   <p className="font-semibold dark:text-white text-black text-base">
