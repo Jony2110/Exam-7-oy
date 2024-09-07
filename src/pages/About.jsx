@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import http from "../utils/axios";
-import { ToastContainer, toast } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function About() {
   const { slug } = useParams();
   const [country, setCountry] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    
-    setLoading(true); 
+    setLoading(true);
     http
       .get(`/${slug}`)
       .then((response) => {
         setCountry(response.data);
-        toast.info('Tanlangan davlat malumotlari tolig keldi', {
+        toast.info("Tanlangan davlat malumotlari tolig keldi", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -26,17 +25,14 @@ function About() {
           draggable: true,
           progress: undefined,
           theme: "light",
-          
-          });
+        });
       })
       .catch((error) => {
         console.error("Error fetching country data:", error);
       })
       .finally(() => {
-        setLoading(false); 
-        
+        setLoading(false);
       });
-      
   }, [slug]);
 
   function handleBorderClick(borderSlug) {
@@ -49,8 +45,8 @@ function About() {
   }
 
   return (
-    <div className="bg-customLight min-h-screen flex flex-col  font-nunito relative dark:bg-customDarkMain">
-      {loading ? ( 
+    <div className="bg-customLight min-h-screen flex flex-col font-nunito relative dark:bg-customDarkMain">
+      {loading ? (
         <div className="flex justify-center items-center h-screen">
           <span className="loading loading-spinner loading-lg"></span>
         </div>
@@ -59,9 +55,9 @@ function About() {
           <div className="max-w-[1280px] mx-auto w-full px-4 sm:px-6 lg:px-8 h-full">
             <button
               onClick={handleHome}
-              className="flex dark:text-white w-full sm:w-[8.5rem] h-[2.50rem] rounded-md dark:bg-customDark items-center justify-center gap-[0.63rem] mt-10 sm:mt-[5rem]"
+              className="flex shadow-md dark:text-white w-full sm:w-[8.5rem] h-[2.50rem] rounded-md dark:bg-customDark items-center justify-center gap-[0.63rem] mt-10 sm:mt-[5rem]"
             >
-              <img src="../public/img/Shape.svg" alt="Back" />
+              <span className="font-extrabold text-2xl">←</span>
               Back
             </button>
             <div className="flex flex-col sm:flex-row mt-10 sm:mt-[5rem] gap-8 sm:gap-[9.00rem]">
@@ -80,7 +76,15 @@ function About() {
                     <p className="font-semibold dark:text-white text-black text-base">
                       Native Name:{" "}
                       <span className="font-normal text-base">
-                        {country.name.nativeName}
+                        {country.name.nativeName
+                          ? Object.values(country.name.nativeName)[0].common
+                          : "N/A"}
+                      </span>
+                    </p>
+                    <p className="font-semibold dark:text-white text-black text-base">
+                      Population:{" "}
+                      <span className="font-normal text-base">
+                        {country.population}
                       </span>
                     </p>
                     <p className="font-semibold dark:text-white text-black text-base">
@@ -111,13 +115,19 @@ function About() {
                   <p className="font-semibold dark:text-white text-black text-base">
                     Currencies:{" "}
                     <span className="font-normal text-base">
-                      {country.currencies}
+                      {country.currencies
+                        ? Object.values(country.currencies)
+                            .map((currency) => currency.name)
+                            .join(", ")
+                        : "N/A"}
                     </span>
                   </p>
                   <p className="font-semibold dark:text-white text-black text-base">
                     Languages:{" "}
                     <span className="font-normal text-base">
-                      {country.languages}
+                      {country.languages
+                        ? Object.values(country.languages).join("  ")
+                        : "N/A"}
                     </span>
                   </p>
                 </div>
@@ -127,7 +137,7 @@ function About() {
               <h2 className=" font-semibold dark:text-white text-black text-base mb-2 sm:mb-0">
                 Border Countries:{" "}
               </h2>
-              {country.borders.length > 0 ? (
+              {country.borders && country.borders.length > 0 ? (
                 <div className="flex flex-wrap  mt-2">
                   {country.borders.map((border) => (
                     <button

@@ -1,38 +1,33 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext"; 
 import { useNavigate } from "react-router-dom";
 
 function Header() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    document.documentElement.classList.toggle("dark", savedTheme === "dark");
-    setIsDarkMode(savedTheme === "dark");
-  }, []);
 
-  const handleTheme = (event) => {
-    const themeMode = event.target.checked ? "dark" : "light";
-    document.documentElement.classList.toggle("dark", themeMode === "dark");
-    localStorage.setItem("theme", themeMode);
-    setIsDarkMode(themeMode === "dark");
-  };
-
-  function handleSubmit() {
+  const handleNavigateHome = () => {
     navigate('/');
-  }
+  };
 
   return (
     <div className="border-b-2 dark:border-b-customDark dark:bg-customDark font-nunito">
       <div className="max-w-[1280px] mx-auto flex justify-between h-20 items-center px-4 sm:px-0">
-        <h1 onClick={handleSubmit} className="dark:text-white cursor-pointer font-extrabold text-xl sm:text-2xl text-black">
+        <h1 
+          onClick={handleNavigateHome} 
+          className="cursor-pointer font-extrabold text-xl sm:text-2xl text-black dark:text-white"
+        >
           Where in the world?
         </h1>
         <label className="swap swap-rotate ml-2 sm:ml-32 hover:cursor-pointer">
-          <span className="ml-4 dark:text-white font-semibold text-sm sm:text-base text-black">
+          <span className="hover:cursor-pointer ml-8 font-semibold text-sm sm:text-base text-black dark:text-white">
             Dark Mode
           </span>
-          <input type="checkbox" onChange={handleTheme} checked={isDarkMode} />
+          <input 
+            type="checkbox" 
+            onChange={toggleTheme} 
+            checked={isDarkMode} 
+          />
           {/* Иконка солнца */}
           <svg
             className="swap-on h-5 w-5 sm:h-6 sm:w-6 fill-current dark:text-white"

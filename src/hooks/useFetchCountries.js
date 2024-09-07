@@ -24,7 +24,7 @@ const useFetchCountries = (limit = 12) => {
       );
       setData(response.data.data);
       setTotalPages(Math.ceil(response.data.total / limit));
-      toast.info("Davlatlar malumotlari keldi", {
+      toast.info("Davlat malumotlari keldi", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -41,14 +41,57 @@ const useFetchCountries = (limit = 12) => {
     }
   };
 
-  const handleSearchChange = (event) => {
+  const handleAllData = () => {
+    http.get(``).then(response => {
+      setData(response.data.data);
+      toast.info("250 ta davlat malumotlari keltirildi", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }).catch(err => {
+      console.log(err);
+    });
+  };
+
+  const handleSearchChange = (value) => {
+     
     setSkip(0);
-    setSearchQuery(event.target.value);
+    setSearchQuery(value);
+    if (value.length > 0) {
+      toast.info("Qidirilgan davlatlar malumoti keldi", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
 
   const handleRegionChange = (event) => {
     setSkip(0);
     setRegionFilter(event.target.value);
+    if (event.target.value.length > 0) {
+      toast.info("Region boyicha filterlandi", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
 
   const handleNext = () => {
@@ -77,6 +120,7 @@ const useFetchCountries = (limit = 12) => {
     handleNext,
     handlePrevious,
     handlePageClick,
+    handleAllData
   };
 };
 

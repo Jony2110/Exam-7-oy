@@ -1,10 +1,14 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useFetchCountries from "../hooks/useFetchCountries";
+import useDebounce from "../hooks/useDebounce";
 
 function Home() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 2500);
+
   const {
     data,
     loading,
@@ -15,6 +19,7 @@ function Home() {
     handleNext,
     handlePrevious,
     handlePageClick,
+    handleAllData
   } = useFetchCountries(12);
 
   const navigate = useNavigate();
@@ -22,6 +27,10 @@ function Home() {
   const handleAbout = (slug) => {
     navigate(`/about/${slug}`);
   };
+
+  useEffect(() => {
+    handleSearchChange(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   return (
     <div className="bg-customLight min-h-screen font-nunito dark:bg-customDarkMain">
@@ -41,12 +50,13 @@ function Home() {
               />
             </svg>
             <input
-              onChange={handleSearchChange}
+              onChange={(e) => setSearchTerm(e.target.value)}
               type="text"
               className="grow text-sm font-normal dark:text-white"
               placeholder="Search for a country…"
             />
           </label>
+          
           <select
             onChange={handleRegionChange}
             className="w-full md:w-[12.5rem] h-14 pl-6 pr-6 text-sm font-normal rounded-md dark:bg-customDark dark:text-white"
@@ -133,6 +143,7 @@ function Home() {
             >
               Next
             </button>
+            <button className="btn" onClick={handleAllData}>All</button>
           </div>
         </div>
       </div>
